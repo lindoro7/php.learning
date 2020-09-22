@@ -25,7 +25,7 @@ spl_autoload_register([(new Autoload()), 'load']);
  * );
  */
 // создаем класс DB и сохраняем в переменную
-$db = new app\services\DB();
+$db = app\services\DB::getInstance();
 
 // создаем инстанс класса Good и 
 // передаем инстанс DB в конструктор Good чтоб использовать 
