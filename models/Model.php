@@ -27,8 +27,9 @@ abstract class Model
   public function getOne($id)
   {
     $tableName = $this->getTableName();
-    $sql = "SELECT * FROM {$tableName} WHERE id = " . $id;
-    return $this->db->find($sql);
+    $sql = "SELECT * FROM {$tableName} WHERE id = :id";
+    $params = ['id' => $id];
+    return $this->db->find($sql, $params);
   }
 
   public function getAll()

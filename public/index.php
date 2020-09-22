@@ -26,17 +26,18 @@ spl_autoload_register([(new Autoload()), 'load']);
  */
 // создаем класс DB и сохраняем в переменную
 $db = new app\services\DB();
+
 // создаем инстанс класса Good и 
 // передаем инстанс DB в конструктор Good чтоб использовать 
 // один инстанс DB, а не плодить их через new DB();
 $good = new app\models\Good($db);
 $user = new app\models\User($db);
 $order = new app\models\Order($db);
-echo $good->getAll();
+$goodModel =  $good->getAll();
+var_dump($goodModel);
 echo $order->getOne(1);
 
 //после подключения трейта доступна и такая запись
 // функция echoTest реализована в трейте calcTrait
-echo $good->echoTest();
-
+// echo $good->echoTest();
 

@@ -16,7 +16,7 @@ class Good extends Model
   {
     // это метод трейта, который мы теперь можем использовать 
     // после подключения: $this->echoTest(); 
-    $this->echoTest();
+    // $this->echoTest();
     return 'products';
   }
 }
