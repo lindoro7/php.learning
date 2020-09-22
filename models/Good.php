@@ -1,6 +1,8 @@
 <?php
 namespace app\models;
 
+use app\traits\calcTrait;
+
 class Good extends Model
 {
   // таким образом подключается трейт и становятся 

@@ -5,7 +5,6 @@ use app\services\DB;
 
 abstract class Model
 {
-  protected $db;
 
   /**
    * Функция реализована абстрактной чтобы явным образом
@@ -15,13 +14,13 @@ abstract class Model
    */
   abstract protected function getTableName():string;
 
-  // в конструкторе перед аргументом можем указать класс,
-  // инстанс которого мы ожидаем, при несоответствии будет fatal error 
-  // например это может быть __construct(DB $db)
-  // также можем указать интерфейс IDB
-  public function __construct(DB $db)
+  /**
+   * @return DB
+   */
+
+  protected function getDB()
   {
-    $this->db = $db;
+    return DB::getInstance();
   }
 
   public function getOne($id)
@@ -29,13 +28,13 @@ abstract class Model
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
     $params = ['id' => $id];
-    return $this->db->find($sql, $params);
+    return $this->getDB()->find($sql, $params);
   }
 
   public function getAll()
   {
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    return $this->db->findAll($sql);
+    return $this->getDB()->findAll($sql);
   }
 }
