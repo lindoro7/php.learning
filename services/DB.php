@@ -57,19 +57,22 @@ class DB implements IDB
     );
   }
 
-  public function find($sql, $params)
+  private function query($sql, $params = [])
   {
     $PDOStatement = $this->getConnection()->prepare($sql);
     $PDOStatement->execute($params);
-    return $PDOStatement->fetch();
+    return $PDOStatement;
+  }
+
+  public function find($sql, $params = [])
+  {
+    return $this->query($sql, $params)->fetch();
   }
 
   public function findAll($sql, $params = [])
   {
     //можем обращаться к константам интерфейса через self::
     // self::TEST_ERROR;
-    $PDOStatement = $this->getConnection()->prepare($sql);
-    $PDOStatement->execute($params);
-    return $PDOStatement->fetchAll();
+    return $this->query($sql, $params)->fetchAll();
   }
 }
