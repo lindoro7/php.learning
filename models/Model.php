@@ -28,14 +28,15 @@ abstract class Model
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
     $params = ['id' => $id];
-    return $this->getDB()->find($sql, $params);
+    return $this->getDB()->getObject($sql, static::class, $params);
   }
 
+  // static::class возвращает строковое значение класса
   public function getAll()
   {
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    return $this->getDB()->findAll($sql);
+    return $this->getDB()->getObjects($sql, static::class);
   }
 
   public function insert()
