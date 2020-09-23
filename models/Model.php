@@ -5,7 +5,6 @@ use app\services\DB;
 
 abstract class Model
 {
-  protected $db;
 
   /**
    * Функция реализована абстрактной чтобы явным образом
@@ -15,26 +14,82 @@ abstract class Model
    */
   abstract protected function getTableName():string;
 
-  // в конструкторе перед аргументом можем указать класс,
-  // инстанс которого мы ожидаем, при несоответствии будет fatal error 
-  // например это может быть __construct(DB $db)
-  // также можем указать интерфейс IDB
-  public function __construct(DB $db)
+  /**
+   * @return DB
+   */
+
+  protected function getDB()
   {
-    $this->db = $db;
+    return DB::getInstance();
   }
 
   public function getOne($id)
   {
     $tableName = $this->getTableName();
-    $sql = "SELECT * FROM {$tableName} WHERE id = " . $id;
-    return $this->db->find($sql);
+    $sql = "SELECT * FROM {$tableName} WHERE id = :id";
+    $params = ['id' => $id];
+    return $this->getDB()->find($sql, $params);
   }
 
   public function getAll()
   {
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    return $this->db->findAll($sql);
+    return $this->getDB()->findAll($sql);
+  }
+
+  public function insert()
+  {
+    $tableName = $this->getTableName();
+    $params = [];
+    $queryKeys = [];
+    $queryValues = [];
+    foreach($this as $fieldName => $value)
+    {
+      if(empty($value))
+      {
+        continue;
+      }
+      $params[$fieldName] = $value;
+      $queryKeys[] = $fieldName;
+      $queryValues[] = ":{$fieldName}";
+    }
+    $sql = "INSERT INTO {$tableName} (" . implode(', ', $queryKeys ) . ") 
+            VALUES (" . implode(', ', $queryValues) .")";
+            var_dump($sql);
+    return $this->getDB()->find($sql, $params);
+  }
+
+  public function update($id)
+  {
+    $tableName = $this->getTableName();
+    $params = [];
+    foreach($this as $fieldName => $value)
+    {
+      if(empty($value))
+      {
+        continue;
+      }
+      $params[$fieldName] = $value;
+    }
+    $queryString = [];
+    foreach($params as $field => $value)
+    {
+      $queryString[] = "{$field} = :{$field}";
+    }
+    $sql = "UPDATE {$tableName} 
+            SET " . implode(', ',$queryString) .
+            " WHERE id = $id";
+
+            var_dump($sql);
+          
+    return $this->getDB()->find($sql, $params);
+  }
+
+  public function delete($id)
+  {
+    $tableName = $this->getTableName();
+    $sql = "DELETE FROM {$tableName} WHERE id = $id";
+    return $this->getDB()->find($sql);
   }
 }

@@ -25,18 +25,23 @@ spl_autoload_register([(new Autoload()), 'load']);
  * );
  */
 // создаем класс DB и сохраняем в переменную
-$db = new app\services\DB();
+// $db = app\services\DB::getInstance();
+
 // создаем инстанс класса Good и 
 // передаем инстанс DB в конструктор Good чтоб использовать 
 // один инстанс DB, а не плодить их через new DB();
 $good = new app\models\Good($db);
 $user = new app\models\User($db);
 $order = new app\models\Order($db);
-echo $good->getAll();
-echo $order->getOne(1);
+
+$order->user = '22';
+$order->user_order = json_encode(["user_id" => "22", "product_id" => "3"]);
+$order->paid = '0';
+$order->delete(5);
+
+
 
 //после подключения трейта доступна и такая запись
 // функция echoTest реализована в трейте calcTrait
-echo $good->echoTest();
-
+// echo $good->echoTest();
 

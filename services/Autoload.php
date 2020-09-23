@@ -31,7 +31,6 @@ class Autoload
 
   public function load($className)
   {
-    var_dump($className);
     $fileName = str_replace(
       ['app\\', '\\'],
       [dirname(__DIR__) . '/', '/'],
@@ -39,8 +38,6 @@ class Autoload
     );
 
     $fileName .= '.php';
-    var_dump($fileName);
-
     
     if(file_exists($fileName)) 
     {

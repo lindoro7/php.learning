@@ -1,6 +1,8 @@
 <?php
 namespace app\models;
 
+use app\traits\calcTrait;
+
 class Good extends Model
 {
   // таким образом подключается трейт и становятся 
@@ -8,15 +10,15 @@ class Good extends Model
   use calcTrait;
 
   public $id;
-  public $name;
+  public $title;
   public $price;
-  public $info;
+  public $description;
 
   protected function getTableName():string
   {
     // это метод трейта, который мы теперь можем использовать 
     // после подключения: $this->echoTest(); 
-    $this->echoTest();
+    // $this->echoTest();
     return 'products';
   }
 }
