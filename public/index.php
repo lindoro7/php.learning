@@ -33,9 +33,13 @@ spl_autoload_register([(new Autoload()), 'load']);
 $good = new app\models\Good($db);
 $user = new app\models\User($db);
 $order = new app\models\Order($db);
-$goodModel =  $good->getAll();
-var_dump($goodModel);
-echo $order->getOne(1);
+
+$order->user = '22';
+$order->user_order = json_encode(["user_id" => "22", "product_id" => "3"]);
+$order->paid = '0';
+$order->delete(5);
+
+
 
 //после подключения трейта доступна и такая запись
 // функция echoTest реализована в трейте calcTrait

@@ -5,9 +5,9 @@ namespace app\models;
 class Order extends Model
 {
   public $id;
-  public $products;
-  public $totalPrice;
-  public $deliveryTime;
+  public $user;
+  public $order;
+  public $paid;
 
   protected function getTableName():string
   {

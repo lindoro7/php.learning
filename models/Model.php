@@ -38,23 +38,58 @@ abstract class Model
     return $this->getDB()->findAll($sql);
   }
 
-  public function save()
-  {
-    
-  }
-
   public function insert()
   {
-
+    $tableName = $this->getTableName();
+    $params = [];
+    $queryKeys = [];
+    $queryValues = [];
+    foreach($this as $fieldName => $value)
+    {
+      if(empty($value))
+      {
+        continue;
+      }
+      $params[$fieldName] = $value;
+      $queryKeys[] = $fieldName;
+      $queryValues[] = ":{$fieldName}";
+    }
+    $sql = "INSERT INTO {$tableName} (" . implode(', ', $queryKeys ) . ") 
+            VALUES (" . implode(', ', $queryValues) .")";
+            var_dump($sql);
+    return $this->getDB()->find($sql, $params);
   }
 
-  public function update()
+  public function update($id)
   {
+    $tableName = $this->getTableName();
+    $params = [];
+    foreach($this as $fieldName => $value)
+    {
+      if(empty($value))
+      {
+        continue;
+      }
+      $params[$fieldName] = $value;
+    }
+    $queryString = [];
+    foreach($params as $field => $value)
+    {
+      $queryString[] = "{$field} = :{$field}";
+    }
+    $sql = "UPDATE {$tableName} 
+            SET " . implode(', ',$queryString) .
+            " WHERE id = $id";
 
+            var_dump($sql);
+          
+    return $this->getDB()->find($sql, $params);
   }
 
-  public function delete()
+  public function delete($id)
   {
-
+    $tableName = $this->getTableName();
+    $sql = "DELETE FROM {$tableName} WHERE id = $id";
+    return $this->getDB()->find($sql);
   }
 }

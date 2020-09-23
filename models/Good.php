@@ -10,9 +10,9 @@ class Good extends Model
   use calcTrait;
 
   public $id;
-  public $name;
+  public $title;
   public $price;
-  public $info;
+  public $description;
 
   protected function getTableName():string
   {
