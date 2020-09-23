@@ -37,4 +37,24 @@ abstract class Model
     $sql = "SELECT * FROM {$tableName}";
     return $this->getDB()->findAll($sql);
   }
+
+  public function save()
+  {
+    
+  }
+
+  public function insert()
+  {
+
+  }
+
+  public function update()
+  {
+
+  }
+
+  public function delete()
+  {
+
+  }
 }
