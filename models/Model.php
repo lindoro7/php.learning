@@ -12,31 +12,31 @@ abstract class Model
    * Также указано значение string, которое она возвращает,
    * чтобы было понятно какой аргумент ждет пользователь этой функции
    */
-  abstract protected function getTableName():string;
+  abstract protected static function getTableName():string;
 
   /**
    * @return DB
    */
 
-  protected function getDB()
+  protected static function getDB()
   {
     return DB::getInstance();
   }
 
-  public function getOne($id)
+  public static function getOne($id)
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
     $params = ['id' => $id];
-    return $this->getDB()->getObject($sql, static::class, $params);
+    return static::getDB()->getObject($sql, static::class, $params);
   }
 
   // static::class возвращает строковое значение класса
-  public function getAll()
+  public static function getAll()
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    return $this->getDB()->getObjects($sql, static::class);
+    return static::getDB()->getObjects($sql, static::class);
   }
 
   public function save()
@@ -64,11 +64,11 @@ abstract class Model
       
     }
     $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)",
-                    $this->getTableName(),
+                    static::getTableName(),
                     implode(', ', $fields),
                     implode(', ', array_keys($params)));
     $this->getDB()->execute($sql, $params);
-    $this->id = $this->getDB()->getLastId();
+    $this->id = static::getDB()->getLastId();
   }
 
   public function update()
@@ -86,17 +86,17 @@ abstract class Model
       
     }
     $sql = sprintf("UPDATE %s SET %s WHERE id = %s",
-                    $this->getTableName(),
+                  static::getTableName(),
                   implode(', ', $fields),
                   $this->id);
-            var_dump($sql);
-    return $this->getDB()->execute($sql, $params);
+                  var_dump($sql);
+                  static::getDB()->execute($sql, $params);
   }
 
   public function delete($id)
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "DELETE FROM {$tableName} WHERE id = $id";
-    return $this->getDB()->find($sql);
+    return static::getDB()->find($sql);
   }
 }

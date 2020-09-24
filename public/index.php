@@ -1,6 +1,7 @@
 <?php
 // используем неймспейс для подключения автолоадера
 use app\services\Autoload;
+use app\models\User;
 
 // подключение класса автозагрузки
 include dirname(__DIR__) . "/services/Autoload.php";
@@ -31,14 +32,11 @@ spl_autoload_register([(new Autoload()), 'load']);
 // передаем инстанс DB в конструктор Good чтоб использовать 
 // один инстанс DB, а не плодить их через new DB();
 $good = new app\models\Good($db);
-$user = new app\models\User($db);
+$userModel = User::getOne(33);
 $order = new app\models\Order($db);
 
-$user->name = 'John';
-$user->login = 'John777';
-$user->password = '12345';
-$user->save();
-var_dump($user) ;
+var_dump($userModel);
+var_dump(User::getAll());
 
 
 

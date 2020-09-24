@@ -9,7 +9,7 @@ class Order extends Model
   public $order;
   public $paid;
 
-  protected function getTableName():string
+  protected static function getTableName():string
   {
     return 'orders';
   }

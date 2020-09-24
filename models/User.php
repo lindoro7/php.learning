@@ -8,7 +8,7 @@ class User extends Model
   public $login;
   public $password;
 
-  protected function getTableName():string
+  protected static function getTableName():string
   {
     return 'users';
   }
