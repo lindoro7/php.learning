@@ -67,7 +67,8 @@ abstract class Model
                     $this->getTableName(),
                     implode(', ', $fields),
                     implode(', ', array_keys($params)));
-    return $this->getDB()->execute($sql, $params);
+    $this->getDB()->execute($sql, $params);
+    $this->id = $this->getDB()->getLastId();
   }
 
   public function update()
