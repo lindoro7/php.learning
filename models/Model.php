@@ -3,6 +3,12 @@ namespace app\models;
 
 use app\services\DB;
 
+/**
+ * Class Model
+ * @package app\models
+ * @property int id
+ * @method
+ */
 abstract class Model
 {
 
@@ -88,15 +94,25 @@ abstract class Model
     $sql = sprintf("UPDATE %s SET %s WHERE id = %s",
                   static::getTableName(),
                   implode(', ', $fields),
-                  $this->id);
-                  var_dump($sql);
-                  static::getDB()->execute($sql, $params);
+                  $this->id);  
+    static::getDB()->execute($sql, $params);
   }
 
-  public function delete($id)
+  public function delete()
   {
-    $tableName = static::getTableName();
-    $sql = "DELETE FROM {$tableName} WHERE id = $id";
-    return static::getDB()->find($sql);
+    $params = [];
+    $fields = [];
+    foreach($this as $fieldName => $value)
+    {
+      if($fieldName == 'id')
+      {
+        $params[":{$fieldName}"] = $value;
+      }
+    }
+    $sql = sprintf("DELETE FROM %s WHERE id = %s",
+                    static::getTableName(),
+                    implode(', ', array_keys($params)));
+    $this->getDB()->execute($sql, $params);
+    var_dump($sql, $this, $params);
   }
 }

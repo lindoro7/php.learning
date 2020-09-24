@@ -32,12 +32,16 @@ spl_autoload_register([(new Autoload()), 'load']);
 // передаем инстанс DB в конструктор Good чтоб использовать 
 // один инстанс DB, а не плодить их через new DB();
 $good = new app\models\Good($db);
-$userModel = User::getOne(33);
+// $userModel = User::getOne(33);
 $order = new app\models\Order($db);
 
-var_dump($userModel);
-var_dump(User::getAll());
-
+// var_dump($userModel);
+$user = new User($db);
+$user->id = '68';
+$user->name = 'Bob';
+$user->login = 'Bob123';
+$user->password = '777';
+$user->save();
 
 
 //после подключения трейта доступна и такая запись
