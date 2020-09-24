@@ -34,10 +34,11 @@ $good = new app\models\Good($db);
 $user = new app\models\User($db);
 $order = new app\models\Order($db);
 
-$user->name = 'Mike';
-$user->login = 'Mike777';
+$user->id = '39';
+$user->name = 'John';
+$user->login = 'John777';
 $user->password = '12345';
-var_dump($user->getOne(33)) ;
+var_dump($user->save()) ;
 
 
 

@@ -93,4 +93,9 @@ class DB implements IDB
     $PDOStatement->setFetchMode(\PDO::FETCH_CLASS, $className);
     return $PDOStatement->fetchAll();
   }
+
+  public function execute($sql, $params = [])
+  {
+    return $this->query($sql, $params);
+  }
 }

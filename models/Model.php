@@ -39,52 +39,57 @@ abstract class Model
     return $this->getDB()->getObjects($sql, static::class);
   }
 
-  public function insert()
+  public function save()
   {
-    $tableName = $this->getTableName();
-    $params = [];
-    $queryKeys = [];
-    $queryValues = [];
-    foreach($this as $fieldName => $value)
+    if(empty($this->id))
     {
-      if(empty($value))
-      {
-        continue;
-      }
-      $params[$fieldName] = $value;
-      $queryKeys[] = $fieldName;
-      $queryValues[] = ":{$fieldName}";
+      $this->insert();
+      return;
     }
-    $sql = "INSERT INTO {$tableName} (" . implode(', ', $queryKeys ) . ") 
-            VALUES (" . implode(', ', $queryValues) .")";
-            var_dump($sql);
-    return $this->getDB()->find($sql, $params);
+    $this->update();
   }
 
-  public function update($id)
+  public function insert()
   {
-    $tableName = $this->getTableName();
     $params = [];
+    $fields = [];
     foreach($this as $fieldName => $value)
     {
-      if(empty($value))
+      if($fieldName == 'id')
       {
         continue;
       }
-      $params[$fieldName] = $value;
+      $fields[] = $fieldName;
+      $params[":{$fieldName}"] = $value;
+      
     }
-    $queryString = [];
-    foreach($params as $field => $value)
-    {
-      $queryString[] = "{$field} = :{$field}";
-    }
-    $sql = "UPDATE {$tableName} 
-            SET " . implode(', ',$queryString) .
-            " WHERE id = $id";
+    $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)",
+                    $this->getTableName(),
+                    implode(', ', $fields),
+                    implode(', ', array_keys($params)));
+    return $this->getDB()->execute($sql, $params);
+  }
 
+  public function update()
+  {
+    $params = [];
+    $fields = [];
+    foreach($this as $fieldName => $value)
+    {
+      if($fieldName == 'id')
+      {
+        continue;
+      }
+      $fields[] = "{$fieldName} = :{$fieldName}";
+      $params[":{$fieldName}"] = $value;
+      
+    }
+    $sql = sprintf("UPDATE %s SET %s WHERE id = %s",
+                    $this->getTableName(),
+                  implode(', ', $fields),
+                  $this->id);
             var_dump($sql);
-          
-    return $this->getDB()->find($sql, $params);
+    return $this->getDB()->execute($sql, $params);
   }
 
   public function delete($id)
