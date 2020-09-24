@@ -79,4 +79,18 @@ class DB implements IDB
     // self::TEST_ERROR;
     return $this->query($sql, $params)->fetchAll();
   }
+
+  public function getObject($sql, $className, $params = [])
+  {
+    $PDOStatement = $this->query($sql, $params);
+    $PDOStatement->setFetchMode(\PDO::FETCH_CLASS, $className);
+    return $PDOStatement->fetch();
+  }
+
+  public function getObjects($sql, $className, $params = [])
+  {
+    $PDOStatement = $this->query($sql, $params);
+    $PDOStatement->setFetchMode(\PDO::FETCH_CLASS, $className);
+    return $PDOStatement->fetchAll();
+  }
 }

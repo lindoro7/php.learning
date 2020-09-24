@@ -34,10 +34,10 @@ $good = new app\models\Good($db);
 $user = new app\models\User($db);
 $order = new app\models\Order($db);
 
-$order->user = '22';
-$order->user_order = json_encode(["user_id" => "22", "product_id" => "3"]);
-$order->paid = '0';
-$order->delete(5);
+$user->name = 'Mike';
+$user->login = 'Mike777';
+$user->password = '12345';
+var_dump($user->getOne(33)) ;
 
 
 
