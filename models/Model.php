@@ -45,6 +45,7 @@ abstract class Model
     return static::getDB()->getObjects($sql, static::class);
   }
 
+  
   public function save()
   {
     if(empty($this->id))
@@ -54,7 +55,8 @@ abstract class Model
     }
     $this->update();
   }
-
+  
+  
   public function insert()
   {
     $params = [];

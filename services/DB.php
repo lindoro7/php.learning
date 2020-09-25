@@ -49,7 +49,12 @@ class DB implements IDB
  * sprintf()
  * принимает первым аргументом строку с плейсхолдерами,
  * вторым и последующими: значения для подстановки на место плейсхолдеров
- */
+ */  
+  /**
+   * getDsn
+   *
+   * @return string
+   */
   protected function getDsn()
   {
     return sprintf(
@@ -60,26 +65,55 @@ class DB implements IDB
       $this->config['charset']
     );
   }
-
+  
+  /**
+   *  query
+   *
+   * @param  string $sql
+   * @param  array $params
+   * @return $PDOStatement
+   */
   private function query($sql, $params = [])
   {
     $PDOStatement = $this->getConnection()->prepare($sql);
     $PDOStatement->execute($params);
     return $PDOStatement;
   }
-
+  
+  /**
+   * find
+   *
+   * @param  string $sql
+   * @param  array $params
+   * @return void
+   */
   public function find($sql, $params = [])
   {
-    return $this->query($sql, $params)->fetch();
+    return $this->query($sql, $params = [])->fetch();
   }
-
+  
+  /**
+   * findAll
+   *
+   * @param  string $sql
+   * @param  array $params
+   * @return array
+   */
   public function findAll($sql, $params = [])
   {
     //можем обращаться к константам интерфейса через self::
     // self::TEST_ERROR;
-    return $this->query($sql, $params)->fetchAll();
+    return $this->query($sql, $params = [])->fetchAll();
   }
-
+  
+  /**
+   * getObject
+   *
+   * @param  string $sql
+   * @param  string $className
+   * @param  array $params
+   * @return object
+   */
   public function getObject($sql, $className, $params = [])
   {
     $PDOStatement = $this->query($sql, $params);
