@@ -8,8 +8,9 @@
 </head>
 <body>
   <ul>
-    <li><a href="?c=user&a=one">Пользователь</a></li>
-    <li><a href="?c=user&a=all">Все пользователи</a></li>
+    <li><a href="?c=order&a=all">Заказы</a></li>
+    <li><a href="?c=good&a=all">Товары</a></li>
+    <li><a href="?c=user&a=all">Пользователи</a></li>
   </ul>
   <?= $content ?>
 </body>
