@@ -1,5 +1,5 @@
 <?php 
-  /**@var \app\models\User $user */
+  /**@var \app\models\User $user */ 
 ?>
 <form method="POST">
   <input type="text" name="name" placeholder="<?= $user->name ?>">
