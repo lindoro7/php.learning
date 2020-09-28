@@ -14,7 +14,7 @@ class Good extends Model
   public $price;
   public $description;
 
-  protected static function getTableName():string
+  protected function getTableName():string
   {
     // это метод трейта, который мы теперь можем использовать 
     // после подключения: $this->echoTest(); 

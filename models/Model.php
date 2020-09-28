@@ -53,7 +53,7 @@ abstract class Model
       $this->insert();
       return;
     }
-    $this->update();
+    $this->update($this->id);
   }
   
   
@@ -61,6 +61,7 @@ abstract class Model
   {
     $params = [];
     $fields = [];
+    $tableName = static::getTableName();
     foreach($this as $fieldName => $value)
     {
       if($fieldName == 'id')
@@ -71,18 +72,16 @@ abstract class Model
       $params[":{$fieldName}"] = $value;
       
     }
-    $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)",
-                    static::getTableName(),
-                    implode(', ', $fields),
-                    implode(', ', array_keys($params)));
-    $this->getDB()->execute($sql, $params);
-    $this->id = static::getDB()->getLastId();
+    $sql = "INSERT INTO {$tableName} (" . implode(', ', $fields ) . ") 
+            VALUES (" . implode(', ', $params) .")";
+    return $this->getDB()->find($sql, $params);
   }
 
-  public function update()
+  public function update($id)
   {
     $params = [];
     $fields = [];
+    $tableName = $this->getTableName();
     foreach($this as $fieldName => $value)
     {
       if($fieldName == 'id')
@@ -93,11 +92,15 @@ abstract class Model
       $params[":{$fieldName}"] = $value;
       
     }
-    $sql = sprintf("UPDATE %s SET %s WHERE id = %s",
-                  static::getTableName(),
-                  implode(', ', $fields),
-                  $this->id);  
-    static::getDB()->execute($sql, $params);
+    $queryString = [];
+    foreach($params as $field => $value)
+    {
+      $queryString[] = "{$field} = :{$field}";
+    }
+    $sql = "UPDATE {$tableName} 
+            SET " . implode(', ',$queryString) .
+            " WHERE id = $id";
+    return $this->getDB()->find($sql, $params);
   }
 
   public function delete()
