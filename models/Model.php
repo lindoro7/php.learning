@@ -57,7 +57,6 @@ abstract class Model
     }
     $sql = "INSERT INTO {$tableName} (" . implode(', ', $queryKeys ) . ") 
             VALUES (" . implode(', ', $queryValues) .")";
-            var_dump($sql);
     return $this->getDB()->find($sql, $params);
   }
 
@@ -81,9 +80,6 @@ abstract class Model
     $sql = "UPDATE {$tableName} 
             SET " . implode(', ',$queryString) .
             " WHERE id = $id";
-
-            var_dump($sql);
-          
     return $this->getDB()->find($sql, $params);
   }
 

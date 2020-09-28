@@ -23,6 +23,11 @@ class GoodController
     return $this->$action();
   }
 
+  public function addAction()
+  {
+    return $this->render('goodAdd');
+  }
+
   public function oneAction()
   {
     $id = $this->getId();

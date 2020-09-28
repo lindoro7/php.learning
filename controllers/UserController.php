@@ -23,17 +23,83 @@ class UserController
     return $this->$action();
   }
 
+  public function addAction()
+  {
+    if($_SERVER['REQUEST_METHOD'] != 'POST')
+    {
+      return $this->render('userAdd');
+    }  
+    
+    if(empty($_POST['login']) || empty($_POST['password']))
+    {
+      $message = 'Заполните поле';
+      if(empty($_POST['login']))
+      {
+        $message .= " login";
+      }
+
+      if(empty($_POST['password']))
+      {
+        $message .= " password";
+      }
+      if($message != 'Заполните поле')
+      {
+        echo $message;
+      }
+      return $this->render('userAdd');
+    }
+
+    $user = new User(DB::getInstance());
+    $user->name = $_POST['name'];
+    $user->login = $_POST['login'];
+    $user->password = $_POST['password'];
+    unset($_POST);
+    $user->insert();
+    return header('Location: ?c=user&a=all');
+  }
+  
+
   public function oneAction()
   {
     $id = $this->getId();
     $user =(new User(DB::getInstance()))->getOne($id);
     return $this->render('userOne', ['user' => $user]);
   }
+  public function changeAction()
+  {
+    if($_SERVER['REQUEST_METHOD'] != 'POST')
+    {
+      $id = $this->getId();
+      $user =(new User(DB::getInstance()))->getOne($id);
+      return $this->render('userChange', ['user' => $user]);
+    }  
+    
+    $user = new User(DB::getInstance());
+    $user->id = $this->getId();
+    $user->name = $_POST['name'];
+    $user->login = $_POST['login'];
+    unset($_POST);
+    $user->update($user->id);
+    return $this->render('userOne', ['user' => $user]);
+  }
+  public function hangeAction()
+  {
+    $id = $this->getId();
+    $user =(new User(DB::getInstance()))->getOne($id);
+    return $this->render('userChange', ['user' => $user]);
+  }
 
   public function allAction()
   {
     $users =(new User(DB::getInstance()))->getAll();
     return $this->render('userAll', ['users' => $users]);
+  }
+
+  public function delAction()
+  {
+    $id = $this->getId();
+    $user =(new User(DB::getInstance()))->delete($id);
+    return header('Location: ?c=user&a=all');
   }
 
   public function render($template, $params = [])

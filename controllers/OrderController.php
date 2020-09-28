@@ -23,6 +23,11 @@ class OrderController
     return $this->$action();
   }
 
+  public function addAction()
+  {
+    return $this->render('orderAdd');
+  }
+
   public function oneAction()
   {
     $id = $this->getId();
