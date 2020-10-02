@@ -41,22 +41,25 @@ abstract class Model
 
   public function insert()
   {
-    $tableName = $this->getTableName();
     $params = [];
-    $queryKeys = [];
-    $queryValues = [];
+    $fields = [];
+   
     foreach($this as $fieldName => $value)
     {
-      if(empty($value))
+      if($fieldName == 'id')
       {
         continue;
       }
-      $params[$fieldName] = $value;
-      $queryKeys[] = $fieldName;
-      $queryValues[] = ":{$fieldName}";
+      $fields[] = $fieldName;
+      $params[":{$fieldName}"] = $value;
+      
     }
-    $sql = "INSERT INTO {$tableName} (" . implode(', ', $queryKeys ) . ") 
-            VALUES (" . implode(', ', $queryValues) .")";
+    $sql = sprintf(
+      "INSERT INTO %s (%s) VALUES (%s)",
+      $this->getTableName(),
+      implode(', ', $fields),
+      implode(', ', array_keys($params))
+    );
     return $this->getDB()->find($sql, $params);
   }
 
