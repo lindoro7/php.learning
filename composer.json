@@ -1,0 +1,7 @@
+{
+    "name": "simple/framework",
+    "description": "my-simple-framework",
+    "require": {
+        "twig/twig": "^3.0"
+    }
+}
