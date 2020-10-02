@@ -54,7 +54,7 @@ class UserController
     $user->login = $_POST['login'];
     $user->password = $_POST['password'];
     unset($_POST);
-    $user->insert();
+    $user->save();
     return header('Location: ?c=user&a=all');
   }
   
@@ -63,15 +63,22 @@ class UserController
   {
     $id = $this->getId();
     $user =(new User(DB::getInstance()))->getOne($id);
-    return $this->render('userOne', ['user' => $user]);
+    return $this->render(
+      'userOne', 
+      [
+        'user' => $user,
+        'title' => "Пользователь: " . $user->login
+      ]);
   }
-  public function changeAction()
+
+
+  public function updateAction()
   {
     if($_SERVER['REQUEST_METHOD'] != 'POST')
     {
       $id = $this->getId();
       $user =(new User(DB::getInstance()))->getOne($id);
-      return $this->render('userChange', ['user' => $user]);
+      return $this->render('userUpdate', ['user' => $user]);
     }  
     
     $user = new User(DB::getInstance());
@@ -79,16 +86,10 @@ class UserController
     $user->name = $_POST['name'];
     $user->login = $_POST['login'];
     unset($_POST);
-    $user->update($user->id);
+    $user->save($user->id);
     return $this->render('userOne', ['user' => $user]);
   }
-  public function hangeAction()
-  {
-    $id = $this->getId();
-    $user =(new User(DB::getInstance()))->getOne($id);
-    return $this->render('userChange', ['user' => $user]);
-  }
-
+  
   public function allAction()
   {
     $users =(new User(DB::getInstance()))->getAll();
@@ -105,10 +106,18 @@ class UserController
   public function render($template, $params = [])
   {
     $content = $this->renderTemplate($template, $params);
+
+    $title = 'Мой магазин';
+    if(!empty($params['title']))
+    {
+      $title = $params['title'];
+    }
+
     return $this->renderTemplate(
       'layouts/main', 
       [
-        'content' => $content
+        'content' => $content,
+        'title' => $title
       ]
     );
   }

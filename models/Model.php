@@ -88,6 +88,7 @@ abstract class Model
     $fields = [];
     foreach($this as $fieldName => $value)
     {
+      
       if($fieldName == 'id')
       {
         continue;
@@ -96,39 +97,23 @@ abstract class Model
       {
         continue;
       }
-
-      $fields[] = $fieldName;
       $params[":{$fieldName}"] = $value;
-      
+      $fields[] = "{$fieldName} = :{$fieldName}";
     }
-    $queryString = [];
-    foreach($fields as $field => $value)
-    {
-      $queryString[] = "{$value}=:{$value}";
-    }
-    $sql = sprintf("UPDATE %s 
-            SET %s
-            WHERE id = %s",
+    
+    $sql = sprintf("UPDATE %s  SET %s WHERE id = %s",
             $this->getTableName(),
-            implode(', ', $queryString),
+            implode(', ', $fields),
             $id
-          );
+    );
     return $this->getDB()->execute($sql, $params);
   }
 
   public function delete($id)
   {
-    $params = [];
-    foreach($this as $fieldName => $value)
-    {
-      if($fieldName == 'id')
-      {
-        $params[":{$fieldName}"] = $value;
-      }
-    }
     $sql = sprintf("DELETE FROM %s WHERE id = %s",
                     $this->getTableName(),
                     $id);
-    $this->getDB()->execute($sql, $params);
+    $this->getDB()->execute($sql);
   }
 }

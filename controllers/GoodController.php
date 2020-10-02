@@ -7,6 +7,7 @@ use app\services\DB;
 class GoodController
 {
   protected $defaultAction = 'all';
+  
   public function run($action)
   {
     if(empty($action))
