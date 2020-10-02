@@ -78,39 +78,47 @@ abstract class Model
       implode(', ', $fields),
       implode(', ', array_keys($params))
     );
-    return $this->getDB()->find($sql, $params);
+    $this->getDB()->execute($sql, $params);
+    $this->id = $this->getDB()->getLastId;
   }
 
   public function update($id)
   {
     $params = [];
     $fields = [];
-    $tableName = $this->getTableName();
     foreach($this as $fieldName => $value)
     {
       if($fieldName == 'id')
       {
         continue;
       }
-      $fields[] = "{$fieldName} = :{$fieldName}";
+      if($fieldName == 'password')
+      {
+        continue;
+      }
+
+      $fields[] = $fieldName;
       $params[":{$fieldName}"] = $value;
       
     }
     $queryString = [];
-    foreach($params as $field => $value)
+    foreach($fields as $field => $value)
     {
-      $queryString[] = "{$field} = :{$field}";
+      $queryString[] = "{$value}=:{$value}";
     }
-    $sql = "UPDATE {$tableName} 
-            SET " . implode(', ',$queryString) .
-            " WHERE id = $id";
-    return $this->getDB()->find($sql, $params);
+    $sql = sprintf("UPDATE %s 
+            SET %s
+            WHERE id = %s",
+            $this->getTableName(),
+            implode(', ', $queryString),
+            $id
+          );
+    return $this->getDB()->execute($sql, $params);
   }
 
-  public function delete()
+  public function delete($id)
   {
     $params = [];
-    $fields = [];
     foreach($this as $fieldName => $value)
     {
       if($fieldName == 'id')
@@ -119,9 +127,8 @@ abstract class Model
       }
     }
     $sql = sprintf("DELETE FROM %s WHERE id = %s",
-                    static::getTableName(),
-                    implode(', ', array_keys($params)));
+                    $this->getTableName(),
+                    $id);
     $this->getDB()->execute($sql, $params);
-    var_dump($sql, $this, $params);
   }
 }
