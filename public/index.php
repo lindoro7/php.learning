@@ -2,7 +2,7 @@
 // используем неймспейс для подключения автолоадера
 use app\services\Autoload;
 use app\models\User;
-
+use app\services\RenderServices;
 
 include dirname(__DIR__) . "/services/Autoload.php";
 
@@ -24,8 +24,9 @@ $controllerClass = 'app\\controllers\\' . ucfirst($controllerName) . 'Controller
 
 if(class_exists($controllerClass))
 {
-  /**@var \app\controllers\UserController $controller */
-  $controller = new $controllerClass();
+  $renderer = new RenderServices();
+  /**@var \app\controllers\Controller $controller */
+  $controller = new $controllerClass($renderer);
   echo $controller->run($actionName);
 } else {
   echo '404';
