@@ -61,7 +61,7 @@ abstract class Model
   {
     $params = [];
     $fields = [];
-    $tableName = static::getTableName();
+   
     foreach($this as $fieldName => $value)
     {
       if($fieldName == 'id')
@@ -72,8 +72,12 @@ abstract class Model
       $params[":{$fieldName}"] = $value;
       
     }
-    $sql = "INSERT INTO {$tableName} (" . implode(', ', $fields ) . ") 
-            VALUES (" . implode(', ', $params) .")";
+    $sql = sprintf(
+      "INSERT INTO %s (%s) VALUES (%s)",
+      $this->getTableName(),
+      implode(', ', $fields),
+      implode(', ', array_keys($params))
+    );
     return $this->getDB()->find($sql, $params);
   }
 
